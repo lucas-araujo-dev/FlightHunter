@@ -1,9 +1,12 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+if Airport.count.zero?
+  Rails.logger.info("Seeding airports from OurAirports...")
+  count = Airport::Import::OurAirports.call
+  Rails.logger.info("Imported #{count} airports.")
+end
+
+if User.count.zero?
+  email = ENV.fetch("OWNER_EMAIL")
+  password = ENV.fetch("OWNER_PASSWORD")
+  User.create!(email: email, password: password)
+  Rails.logger.info("Created owner user #{email}.")
+end
