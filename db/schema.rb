@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_212301) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_213733) do
   create_table "airports", force: :cascade do |t|
     t.string "airport_type"
     t.string "city"
@@ -26,6 +26,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_212301) do
     t.index ["city"], name: "index_airports_on_city"
     t.index ["country"], name: "index_airports_on_country"
     t.index ["iata_code"], name: "index_airports_on_iata_code", unique: true, where: "iata_code IS NOT NULL"
+    t.index ["icao_code"], name: "index_airports_on_icao_code", unique: true, where: "icao_code IS NOT NULL"
   end
 
   create_table "alert_matches", force: :cascade do |t|
