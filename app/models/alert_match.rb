@@ -1,0 +1,2 @@
+class AlertMatch < ApplicationRecord
+end

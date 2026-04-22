@@ -1,0 +1,10 @@
+class CreateAlertMatches < ActiveRecord::Migration[8.1]
+  def change
+    create_table :alert_matches do |t|
+      t.references :alert, null: false, foreign_key: true
+      t.references :flight_offer, null: false, foreign_key: true
+
+      t.timestamps
+    end
+  end
+end

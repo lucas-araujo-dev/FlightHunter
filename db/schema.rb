@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_211059) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_211420) do
   create_table "airports", force: :cascade do |t|
     t.string "airport_type"
     t.string "city"
@@ -28,11 +28,52 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_211059) do
     t.index ["iata_code"], name: "index_airports_on_iata_code", unique: true, where: "iata_code IS NOT NULL"
   end
 
+  create_table "alert_matches", force: :cascade do |t|
+    t.integer "alert_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "flight_offer_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alert_id"], name: "index_alert_matches_on_alert_id"
+    t.index ["flight_offer_id"], name: "index_alert_matches_on_flight_offer_id"
+  end
+
   create_table "alerts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_alerts_on_user_id"
+  end
+
+  create_table "flight_offers", force: :cascade do |t|
+    t.string "airline_iata", limit: 3
+    t.datetime "arrival_at", null: false
+    t.string "cabin_class"
+    t.datetime "created_at", null: false
+    t.string "currency", limit: 3
+    t.text "deep_link", null: false
+    t.datetime "departure_at", null: false
+    t.integer "destination_airport_id", null: false
+    t.datetime "expires_at"
+    t.text "flight_numbers"
+    t.datetime "found_at", null: false
+    t.integer "miles"
+    t.string "offer_type", null: false
+    t.integer "origin_airport_id", null: false
+    t.bigint "price_cents"
+    t.string "program"
+    t.string "provider", null: false
+    t.text "raw_payload"
+    t.datetime "return_arrival_at"
+    t.datetime "return_departure_at"
+    t.integer "stops", default: 0, null: false
+    t.bigint "taxes_cents"
+    t.datetime "updated_at", null: false
+    t.index ["destination_airport_id"], name: "index_flight_offers_on_destination_airport_id"
+    t.index ["expires_at"], name: "index_flight_offers_on_expires_at"
+    t.index ["found_at"], name: "index_flight_offers_on_found_at"
+    t.index ["origin_airport_id", "destination_airport_id", "departure_at"], name: "idx_flight_offers_route_departure"
+    t.index ["origin_airport_id"], name: "index_flight_offers_on_origin_airport_id"
+    t.index ["provider"], name: "index_flight_offers_on_provider"
   end
 
   create_table "users", force: :cascade do |t|
@@ -45,5 +86,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_211059) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "alert_matches", "alerts"
+  add_foreign_key "alert_matches", "flight_offers"
   add_foreign_key "alerts", "users"
+  add_foreign_key "flight_offers", "airports", column: "destination_airport_id"
+  add_foreign_key "flight_offers", "airports", column: "origin_airport_id"
 end
