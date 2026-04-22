@@ -1,0 +1,97 @@
+<%= form_with url: "/searches", method: :post, local: true,
+              data: {turbo_frame: "search_results"},
+              class: "space-y-6 max-w-3xl mx-auto p-6 bg-white rounded-lg shadow" do |f| %>
+
+  <h2 class="text-xl font-semibold text-gray-900">Buscar voos</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div data-controller="airport-combobox"
+         data-airport-combobox-url-value="<%= autocomplete_url %>"
+         class="relative">
+      <label class="block text-sm font-medium text-gray-700">Origem</label>
+      <input type="text" autocomplete="off"
+             data-airport-combobox-target="input"
+             data-action="input->airport-combobox#search"
+             placeholder="IATA, cidade ou nome do aeroporto"
+             class="mt-1 block w-full rounded border-gray-300 shadow-sm">
+      <%= hidden_field_tag "origin_type", value_for(:origin_type),
+          data: {airport_combobox_target: "typeInput"} %>
+      <%= hidden_field_tag "origin_code", value_for(:origin_code),
+          data: {airport_combobox_target: "codeInput"} %>
+      <ul data-airport-combobox-target="dropdown"
+          class="hidden absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-md max-h-64 overflow-auto"></ul>
+    </div>
+
+    <div data-controller="airport-combobox"
+         data-airport-combobox-url-value="<%= autocomplete_url %>"
+         class="relative">
+      <label class="block text-sm font-medium text-gray-700">Destino</label>
+      <input type="text" autocomplete="off"
+             data-airport-combobox-target="input"
+             data-action="input->airport-combobox#search"
+             placeholder="IATA, cidade ou nome do aeroporto"
+             class="mt-1 block w-full rounded border-gray-300 shadow-sm">
+      <%= hidden_field_tag "destination_type", value_for(:destination_type),
+          data: {airport_combobox_target: "typeInput"} %>
+      <%= hidden_field_tag "destination_code", value_for(:destination_code),
+          data: {airport_combobox_target: "codeInput"} %>
+      <ul data-airport-combobox-target="dropdown"
+          class="hidden absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-md max-h-64 overflow-auto"></ul>
+    </div>
+  </div>
+
+  <fieldset class="flex gap-4 items-center">
+    <legend class="sr-only">Tipo</legend>
+    <label class="inline-flex items-center gap-2">
+      <%= f.radio_button :trip_type, "one_way", checked: !round_trip?, class: "h-4 w-4" %>
+      <span>Só ida</span>
+    </label>
+    <label class="inline-flex items-center gap-2">
+      <%= f.radio_button :trip_type, "round_trip", checked: round_trip?, class: "h-4 w-4" %>
+      <span>Ida e volta</span>
+    </label>
+  </fieldset>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :departure_date_from, "Partida de", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :departure_date_from, required: true, value: value_for(:departure_date_from),
+          class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :departure_date_to, "Partida até", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :departure_date_to, required: true, value: value_for(:departure_date_to),
+          class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 <%= "hidden" unless round_trip? %>">
+    <div>
+      <%= f.label :return_date_from, "Volta de", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :return_date_from, value: value_for(:return_date_from),
+          class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :return_date_to, "Volta até", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :return_date_to, value: value_for(:return_date_to),
+          class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <%= f.label :cabin_class, "Classe", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :cabin_class, CABIN_CLASSES, {selected: value_for(:cabin_class, "economy")},
+          class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+    <div>
+      <%= f.label :passengers, "Passageiros", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :passengers, min: 1, max: 9, value: value_for(:passengers, 1),
+          class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+  </div>
+
+  <%= f.submit "Buscar", class: "px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700" %>
+<% end %>
+
+<turbo-frame id="search_results" class="mt-6 block max-w-3xl mx-auto"></turbo-frame>
