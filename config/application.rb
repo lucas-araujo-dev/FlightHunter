@@ -18,7 +18,7 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Seats
+module Flighthunter
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
@@ -38,5 +38,10 @@ module Seats
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.time_zone = "America/Fortaleza"
+    config.active_record.default_timezone = :utc
+    config.i18n.default_locale = :"pt-BR"
+    config.i18n.available_locales = [ :"pt-BR", :en ]
   end
 end
