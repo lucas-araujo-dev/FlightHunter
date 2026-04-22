@@ -43,5 +43,8 @@ module Flighthunter
     config.active_record.default_timezone = :utc
     config.i18n.default_locale = :"pt-BR"
     config.i18n.available_locales = [ :"pt-BR", :en ]
+
+    config.view_component.preview_paths << Rails.root.join("spec/components/previews").to_s
+    config.view_component.default_preview_layout = "component_preview"
   end
 end
