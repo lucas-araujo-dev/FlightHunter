@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_211420) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_211754) do
   create_table "airports", force: :cascade do |t|
     t.string "airport_type"
     t.string "city"
@@ -38,9 +38,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_211420) do
   end
 
   create_table "alerts", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "cabin_class", default: "economy", null: false
     t.datetime "created_at", null: false
+    t.string "currency", limit: 3, default: "BRL", null: false
+    t.date "departure_date_from", null: false
+    t.date "departure_date_to", null: false
+    t.string "destination_code", null: false
+    t.string "destination_type", null: false
+    t.datetime "last_checked_at"
+    t.integer "max_miles"
+    t.bigint "max_price_cents"
+    t.string "origin_code", null: false
+    t.string "origin_type", null: false
+    t.integer "passengers", default: 1, null: false
+    t.date "return_date_from"
+    t.date "return_date_to"
+    t.string "trip_type", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["active", "last_checked_at"], name: "idx_alerts_active_checked"
     t.index ["user_id"], name: "index_alerts_on_user_id"
   end
 
