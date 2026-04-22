@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_210700) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_211059) do
+  create_table "airports", force: :cascade do |t|
+    t.string "airport_type"
+    t.string "city"
+    t.string "country", limit: 2, null: false
+    t.datetime "created_at", null: false
+    t.string "iata_code", limit: 3
+    t.string "icao_code", limit: 4
+    t.float "latitude"
+    t.float "longitude"
+    t.string "name", null: false
+    t.string "timezone"
+    t.datetime "updated_at", null: false
+    t.index ["city"], name: "index_airports_on_city"
+    t.index ["country"], name: "index_airports_on_country"
+    t.index ["iata_code"], name: "index_airports_on_iata_code", unique: true, where: "iata_code IS NOT NULL"
+  end
+
   create_table "alerts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
