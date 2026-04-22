@@ -49,7 +49,7 @@ class Airport::Import::OurAirports
     uri = URI.parse(source)
     raise ArgumentError, "Only HTTPS URLs are allowed for remote imports" unless uri.is_a?(URI::HTTPS)
 
-    body = Net::HTTP.get(uri)
+    body = Net::HTTP.get(uri).force_encoding("UTF-8")
     StringIO.new(body)
   end
 
