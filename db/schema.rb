@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_211754) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_212106) do
   create_table "airports", force: :cascade do |t|
     t.string "airport_type"
     t.string "city"
@@ -32,7 +32,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_211754) do
     t.integer "alert_id", null: false
     t.datetime "created_at", null: false
     t.integer "flight_offer_id", null: false
+    t.datetime "notified_at"
     t.datetime "updated_at", null: false
+    t.index ["alert_id", "flight_offer_id"], name: "idx_alert_matches_unique", unique: true
     t.index ["alert_id"], name: "index_alert_matches_on_alert_id"
     t.index ["flight_offer_id"], name: "index_alert_matches_on_flight_offer_id"
   end
