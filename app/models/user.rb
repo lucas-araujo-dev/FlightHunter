@@ -7,6 +7,10 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: {case_sensitive: false}
 
+  def owner?
+    true
+  end
+
   def program_credentials
     raw = read_attribute(:program_credentials)
     raw.present? ? JSON.parse(raw) : {}
