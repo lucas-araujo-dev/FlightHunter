@@ -498,12 +498,19 @@
   require "csv"
 
   class Airport::Import::OurAirports
-    SOURCE_URL = "https://davidmegginson.github.io/ourairports-data/airports.csv"
+    DEFAULT_SOURCE_URL = "https://davidmegginson.github.io/ourairports-data/airports.csv"
     EXCLUDED_TYPES = %w[heliport closed seaplane_base balloonport].freeze
-    BATCH_SIZE = 1000
 
-    def self.call(source: SOURCE_URL, io: nil)
-      new(source: source, io: io).call
+    def self.source_url
+      ENV.fetch("OUR_AIRPORTS_URL", DEFAULT_SOURCE_URL)
+    end
+
+    def self.batch_size
+      ENV.fetch("OUR_AIRPORTS_BATCH_SIZE", "1000").to_i
+    end
+
+    def self.call(source: nil, io: nil)
+      new(source: source || source_url, io: io).call
     end
 
     def initialize(source:, io: nil)
@@ -522,7 +529,7 @@
         next if row["ident"].blank?
 
         batch << map_row(row)
-        if batch.size >= BATCH_SIZE
+        if batch.size >= self.class.batch_size
           imported += flush(batch)
           batch = []
         end
