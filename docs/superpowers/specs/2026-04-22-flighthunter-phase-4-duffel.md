@@ -33,6 +33,7 @@ Autoridade: `CLAUDE.base.md`.
 - **Controller thin.** `SearchesController#create` continua com 5-7 linhas: normaliza params → delega pra `Dispatch` → renderiza `create.turbo_stream.erb`.
 - **Orquestração nomeada.** `Dispatch` é um PORO (não callback, não `after_commit`). `Broadcast` idem. Nenhum side-effect escondido.
 - **Zero route overrides.** Rotas `/searches` já resolvidas na Fase 3 sem custom mapping. Mantém.
+- **i18n obrigatório em toda string user-facing.** Zero hardcode em views, components, flash messages, error messages de `Query#validate!` e labels de `ProviderStatusComponent`. Tudo via `t("...")` com `pt-BR` + `en` espelhados (espelhamento é invariante: se a key existe em um locale, existe no outro). Specs usam `I18n.t(...)` nas assertions, nunca string literal em PT. Mensagens de `ArgumentError` em `Query#validate!` carregam o key i18n no `message` e o controller traduz antes de `flash.now[:alert]`. Regra do projeto: toda PR que introduza string literal user-facing é bloqueada.
 
 ## 4. Arquivos
 
@@ -181,20 +182,32 @@ class FlightOffer::Search::Query < Data.define(
     end
   end
 
-  def validate!
-    raise ArgumentError, "origin_type inválido"      unless LOCATION_TYPES.include?(origin_type)
-    raise ArgumentError, "destination_type inválido" unless LOCATION_TYPES.include?(destination_type)
-    raise ArgumentError, "trip_type inválido"        unless TRIP_TYPES.include?(trip_type)
-    raise ArgumentError, "cabin_class inválido"      unless CABIN_CLASSES.include?(cabin_class)
-    raise ArgumentError, "passengers fora do range 1..9" unless (1..9).cover?(passengers)
-    raise ArgumentError, "departure_date_from > departure_date_to" if departure_date_from > departure_date_to
-    raise ArgumentError, "departure_date_from no passado" if departure_date_from < Date.current
-    if round_trip?
-      raise ArgumentError, "round_trip exige return_date_from" if return_date_from.blank?
-      raise ArgumentError, "return_date_from < departure_date_from" if return_date_from < departure_date_from
+  # Raise InvalidError.new(i18n_key, **interpolations). Controller traduz antes
+  # de exibir. Mensagem em inglês pura só em log (via #to_s do InvalidError).
+  class InvalidError < StandardError
+    attr_reader :i18n_key, :interpolations
+
+    def initialize(i18n_key, **interpolations)
+      @i18n_key = i18n_key
+      @interpolations = interpolations
+      super("Invalid search query: #{i18n_key}")
     end
-    raise ArgumentError, "origem sem aeroportos" if origin_airports.empty?
-    raise ArgumentError, "destino sem aeroportos" if destination_airports.empty?
+  end
+
+  def validate!
+    raise InvalidError.new("searches.errors.invalid_origin_type")      unless LOCATION_TYPES.include?(origin_type)
+    raise InvalidError.new("searches.errors.invalid_destination_type") unless LOCATION_TYPES.include?(destination_type)
+    raise InvalidError.new("searches.errors.invalid_trip_type")        unless TRIP_TYPES.include?(trip_type)
+    raise InvalidError.new("searches.errors.invalid_cabin_class")      unless CABIN_CLASSES.include?(cabin_class)
+    raise InvalidError.new("searches.errors.invalid_passengers")       unless (1..9).cover?(passengers)
+    raise InvalidError.new("searches.errors.departure_range_invalid")  if departure_date_from > departure_date_to
+    raise InvalidError.new("searches.errors.departure_in_past")        if departure_date_from < Date.current
+    if round_trip?
+      raise InvalidError.new("searches.errors.return_date_required") if return_date_from.blank?
+      raise InvalidError.new("searches.errors.return_before_departure") if return_date_from < departure_date_from
+    end
+    raise InvalidError.new("searches.errors.origin_has_no_airports")      if origin_airports.empty?
+    raise InvalidError.new("searches.errors.destination_has_no_airports") if destination_airports.empty?
     self
   end
 
@@ -214,7 +227,7 @@ end
 
 ### 6.2 Testes
 - `from_params` constrói com defaults (trip_type "one_way", cabin "economy", passengers 1).
-- `validate!` raise em cada invariante (matriz de casos).
+- `validate!` raise `InvalidError` em cada invariante; asserir `e.i18n_key` (string de chave), nunca a tradução. Matriz completa cobrindo todos os 11 keys de `searches.errors.*`.
 - `cache_key` determinístico: mesmo input → mesma chave; inputs diferentes → chaves diferentes.
 - `round_trip?` / `one_way?` refletem `trip_type`.
 - `origin_airports` resolve por IATA e por city|country.
@@ -710,8 +723,8 @@ class SearchesController < ApplicationController
     respond_to do |format|
       format.turbo_stream # renderiza app/views/searches/create.turbo_stream.erb
     end
-  rescue ArgumentError => e
-    flash.now[:alert] = e.message
+  rescue FlightOffer::Search::Query::InvalidError => e
+    flash.now[:alert] = t(e.i18n_key, **e.interpolations)
     @search_params = search_params.to_h
     render :new, status: :unprocessable_entity
   end
@@ -748,8 +761,8 @@ end
   - Response 200, content-type `text/vnd.turbo-stream.html`
   - Body contém `turbo-stream action="replace" target="search_results"`
   - Body contém `turbo-cable-stream-source` apontando pra `flight_offer_search_<id>`
-- **POST /searches** invalid params → 422 + flash.alert + re-render form
-- **POST /searches** without `origin_code` → 422 com mensagem i18n
+- **POST /searches** invalid params → 422 + flash.alert + re-render form. Asserir `I18n.t("searches.errors.<key>")` (tradução) no body, nunca string literal.
+- **POST /searches** sem `origin_code` → 422 com `I18n.t("searches.errors.origin_has_no_airports")` no body.
 
 ## 14. `SearchResultsComponent`
 
@@ -865,6 +878,18 @@ pt-BR:
       title: "Nenhuma oferta encontrada."
       create_alert: "Criar alerta com esses critérios"
     cached_badge: "em cache"
+    errors:
+      invalid_origin_type: "Origem inválida."
+      invalid_destination_type: "Destino inválido."
+      invalid_trip_type: "Tipo de viagem inválido."
+      invalid_cabin_class: "Classe de cabine inválida."
+      invalid_passengers: "Número de passageiros fora do range 1–9."
+      departure_range_invalid: "Data inicial de ida maior que a final."
+      departure_in_past: "Data de ida não pode estar no passado."
+      return_date_required: "Ida e volta exige data de retorno."
+      return_before_departure: "Retorno antes da ida."
+      origin_has_no_airports: "Nenhum aeroporto encontrado na origem."
+      destination_has_no_airports: "Nenhum aeroporto encontrado no destino."
   flight_offer:
     direct: "direto"
     stops:
@@ -890,6 +915,18 @@ en:
       title: "No offers found."
       create_alert: "Create alert with these criteria"
     cached_badge: "cached"
+    errors:
+      invalid_origin_type: "Invalid origin."
+      invalid_destination_type: "Invalid destination."
+      invalid_trip_type: "Invalid trip type."
+      invalid_cabin_class: "Invalid cabin class."
+      invalid_passengers: "Passenger count must be between 1 and 9."
+      departure_range_invalid: "Departure window end is before start."
+      departure_in_past: "Departure date cannot be in the past."
+      return_date_required: "Round-trip requires a return date."
+      return_before_departure: "Return cannot be before departure."
+      origin_has_no_airports: "No airports found at origin."
+      destination_has_no_airports: "No airports found at destination."
   flight_offer:
     direct: "direct"
     stops:
