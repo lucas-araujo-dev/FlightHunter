@@ -10,15 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 1) do
-  create_table "solid_cache_entries", force: :cascade do |t|
-    t.integer "byte_size", limit: 4, null: false
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_210700) do
+  create_table "alerts", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.binary "key", limit: 1024, null: false
-    t.integer "key_hash", limit: 8, null: false
-    t.binary "value", limit: 536870912, null: false
-    t.index ["byte_size"], name: "index_solid_cache_entries_on_byte_size"
-    t.index ["key_hash", "byte_size"], name: "index_solid_cache_entries_on_key_hash_and_byte_size"
-    t.index ["key_hash"], name: "index_solid_cache_entries_on_key_hash", unique: true
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_alerts_on_user_id"
   end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "password_digest", null: false
+    t.text "program_credentials"
+    t.string "telegram_chat_id"
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  add_foreign_key "alerts", "users"
 end
