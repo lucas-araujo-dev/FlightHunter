@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_212106) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_212301) do
   create_table "airports", force: :cascade do |t|
     t.string "airport_type"
     t.string "city"
@@ -93,6 +93,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_212106) do
     t.index ["origin_airport_id", "destination_airport_id", "departure_at"], name: "idx_flight_offers_route_departure"
     t.index ["origin_airport_id"], name: "index_flight_offers_on_origin_airport_id"
     t.index ["provider"], name: "index_flight_offers_on_provider"
+  end
+
+  create_table "provider_checks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "destination_code"
+    t.integer "duration_ms"
+    t.text "error_message"
+    t.integer "offers_count", default: 0, null: false
+    t.string "origin_code"
+    t.string "provider", null: false
+    t.datetime "ran_at", null: false
+    t.string "status", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "ran_at"], name: "index_provider_checks_on_provider_and_ran_at"
+    t.index ["status"], name: "index_provider_checks_on_status"
   end
 
   create_table "users", force: :cascade do |t|
