@@ -27,9 +27,9 @@ RSpec.describe Airport, type: :model do
 
   describe ".in_city scope" do
     it "groups airports by city + country" do
-      create(:airport, :sao_paulo, iata_code: "GRU")
-      create(:airport, city: "São Paulo", country: "BR", iata_code: "CGH")
-      create(:airport, :sao_paulo, iata_code: "VCP")
+      create(:airport, :sao_paulo, iata_code: "GRU", icao_code: "SBGR")
+      create(:airport, city: "São Paulo", country: "BR", iata_code: "CGH", icao_code: "SBRJ")
+      create(:airport, :sao_paulo, iata_code: "VCP", icao_code: "SBCP")
       results = Airport.where(city: "São Paulo", country: "BR")
       expect(results.count).to eq(3)
     end

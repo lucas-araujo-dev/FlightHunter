@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Seats" %></title>
+    <title><%= content_for(:title) || "FlightHunter" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Seats">
+    <meta name="application-name" content="FlightHunter">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -24,7 +24,16 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <%= render "layouts/navbar" %>
+
+    <% if flash[:notice] %>
+      <div class="max-w-7xl mx-auto px-6 py-3 bg-green-50 text-green-700 text-sm rounded"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="max-w-7xl mx-auto px-6 py-3 bg-red-50 text-red-700 text-sm rounded"><%= flash[:alert] %></div>
+    <% end %>
+
+    <main>
       <%= yield %>
     </main>
   </body>
