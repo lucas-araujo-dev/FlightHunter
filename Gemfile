@@ -40,6 +40,28 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# UI components encapsulated as Ruby classes [https://viewcomponent.org]
+gem "view_component", "~> 3.0"
+
+# Headless Chrome via CDP for scraping
+gem "ferrum", "~> 0.15"
+
+# HTML/XML parsing
+gem "nokogiri", "~> 1.16"
+
+# HTTP client
+gem "httparty", "~> 0.22"
+
+# Telegram bot client
+gem "telegram-bot-ruby", "~> 2.0"
+
+# Error tracking
+gem "sentry-ruby", "~> 5.17"
+gem "sentry-rails", "~> 5.17"
+
+# CSV stdlib (bundled gem in Ruby 3.4+)
+gem "csv"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -52,9 +74,38 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Testing framework
+  gem "rspec-rails", "~> 7.0"
+
+  # Test data factories
+  gem "factory_bot_rails", "~> 6.4"
+
+  # Fake data generator
+  gem "faker", "~> 3.3"
+
+  # Ruby linter/formatter
+  gem "standard", ">= 1.35.1"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+end
+
+group :test do
+  # HTTP interaction recording/replaying
+  gem "vcr", "~> 6.2"
+
+  # HTTP request stubbing
+  gem "webmock", "~> 3.23"
+
+  # Acceptance test framework
+  gem "capybara"
+
+  # Browser automation driver
+  gem "selenium-webdriver"
+
+  # Extra RSpec matchers for Rails
+  gem "shoulda-matchers", "~> 6.2"
 end
