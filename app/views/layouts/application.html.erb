@@ -24,6 +24,15 @@
   </head>
 
   <body>
+    <%= render "layouts/navbar" %>
+
+    <% if flash[:notice] %>
+      <div class="max-w-7xl mx-auto px-6 py-3 bg-green-50 text-green-700 text-sm rounded"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="max-w-7xl mx-auto px-6 py-3 bg-red-50 text-red-700 text-sm rounded"><%= flash[:alert] %></div>
+    <% end %>
+
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>

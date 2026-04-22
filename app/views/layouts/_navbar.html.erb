@@ -1,0 +1,12 @@
+<% if logged_in? %>
+  <nav class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <%= link_to "FlightHunter", root_path, class: "text-lg font-semibold text-indigo-700" %>
+      <div class="flex items-center gap-4 text-sm">
+        <span class="text-gray-600"><%= current_user.email %></span>
+        <%= button_to "Sair", logout_path, method: :delete,
+            class: "text-gray-700 hover:text-red-700 underline" %>
+      </div>
+    </div>
+  </nav>
+<% end %>
