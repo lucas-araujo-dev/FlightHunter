@@ -1,0 +1,6 @@
+<div class="py-8 px-4">
+  <%= render SearchFormComponent.new(
+        autocomplete_url: airports_path,
+        search_params: @search_params
+      ) %>
+</div>

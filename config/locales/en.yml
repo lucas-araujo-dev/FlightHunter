@@ -1,31 +1,46 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  app:
+    name: FlightHunter
+    description: "Personal tool for flight deal hunting."
+
+  navbar:
+    brand: FlightHunter
+    logout: Sign out
+
+  sessions:
+    new:
+      title: "Sign in to FlightHunter"
+      email: Email
+      password: Password
+      submit: Sign in
+    flashes:
+      welcome: "Welcome, %{email}."
+      invalid_credentials: "Invalid email or password."
+      signed_out: "Signed out."
+      required: "Please sign in to continue."
+
+  searches:
+    new:
+      title: "Search flights"
+    form:
+      origin: Origin
+      destination: Destination
+      airport_placeholder: "IATA, city or airport name"
+      trip_type_legend: Type
+      one_way: "One-way"
+      round_trip: "Round trip"
+      departure_date_from: "Departure date"
+      departure_date_to: "Flexible until (optional)"
+      return_date_from: "Return date"
+      return_date_to: "Flexible until (optional)"
+      cabin_class: Class
+      passengers: Passengers
+      submit: Search
+
+  enums:
+    flight_offer:
+      cabin_class:
+        economy: Economy
+        premium_economy: "Premium Economy"
+        business: Business
+        first: "First class"

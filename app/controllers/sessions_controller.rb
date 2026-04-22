@@ -9,15 +9,15 @@ class SessionsController < ApplicationController
     user = User.find_by("lower(email) = ?", params[:email].to_s.downcase.strip)
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect_to root_path, notice: "Bem-vindo, #{user.email}."
+      redirect_to root_path, notice: t("sessions.flashes.welcome", email: user.email)
     else
-      flash.now[:alert] = "Email ou senha inválidos."
+      flash.now[:alert] = t("sessions.flashes.invalid_credentials")
       render :new, status: :unprocessable_content
     end
   end
 
   def destroy
     reset_session
-    redirect_to login_path, notice: "Sessão encerrada."
+    redirect_to login_path, notice: t("sessions.flashes.signed_out")
   end
 end
