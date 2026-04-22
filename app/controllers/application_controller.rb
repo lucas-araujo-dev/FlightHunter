@@ -16,6 +16,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_owner!
-    redirect_to login_path, alert: "Faça login para continuar." unless logged_in?
+    redirect_to login_path, alert: t("sessions.flashes.required") unless logged_in?
   end
 end

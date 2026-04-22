@@ -1,0 +1,46 @@
+pt-BR:
+  app:
+    name: FlightHunter
+    description: "Ferramenta pessoal de busca de promoções de passagens."
+
+  navbar:
+    brand: FlightHunter
+    logout: Sair
+
+  sessions:
+    new:
+      title: "Entrar no FlightHunter"
+      email: Email
+      password: Senha
+      submit: Entrar
+    flashes:
+      welcome: "Bem-vindo, %{email}."
+      invalid_credentials: "Email ou senha inválidos."
+      signed_out: "Sessão encerrada."
+      required: "Faça login para continuar."
+
+  searches:
+    new:
+      title: "Buscar voos"
+    form:
+      origin: Origem
+      destination: Destino
+      airport_placeholder: "IATA, cidade ou nome do aeroporto"
+      trip_type_legend: Tipo
+      one_way: "Só ida"
+      round_trip: "Ida e volta"
+      departure_date_from: "Data de partida"
+      departure_date_to: "Flexível até (opcional)"
+      return_date_from: "Data de volta"
+      return_date_to: "Flexível até (opcional)"
+      cabin_class: Classe
+      passengers: Passageiros
+      submit: Buscar
+
+  enums:
+    flight_offer:
+      cabin_class:
+        economy: Econômica
+        premium_economy: "Premium Econômica"
+        business: Executiva
+        first: "Primeira classe"

@@ -15,4 +15,8 @@ class SearchFormComponent < ViewComponent::Base
   def round_trip?
     value_for(:trip_type) == "round_trip"
   end
+
+  def cabin_options
+    CABIN_CLASSES.map { |key| [I18n.t("enums.flight_offer.cabin_class.#{key}"), key] }
+  end
 end

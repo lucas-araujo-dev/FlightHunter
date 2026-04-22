@@ -7,7 +7,7 @@ RSpec.describe "Sessions", type: :request do
     it "renders the login form when logged out" do
       get login_path
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Entrar no FlightHunter")
+      expect(response.body).to include(I18n.t("sessions.new.title"))
     end
 
     it "redirects to root when already logged in" do
@@ -32,7 +32,7 @@ RSpec.describe "Sessions", type: :request do
     it "rejects wrong password" do
       post session_path, params: {email: user.email, password: "wrong"}
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.body).to include("Email ou senha inválidos.")
+      expect(response.body).to include(I18n.t("sessions.flashes.invalid_credentials"))
     end
 
     it "rejects unknown email" do

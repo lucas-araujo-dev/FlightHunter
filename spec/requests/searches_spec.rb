@@ -11,12 +11,12 @@ RSpec.describe "Searches", type: :request do
     it "renders the search form" do
       get new_search_path
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Buscar voos")
+      expect(response.body).to include(I18n.t("searches.new.title"))
     end
 
     it "is the root route" do
       get root_path
-      expect(response.body).to include("Buscar voos")
+      expect(response.body).to include(I18n.t("searches.new.title"))
     end
   end
 
