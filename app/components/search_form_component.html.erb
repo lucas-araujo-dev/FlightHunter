@@ -54,25 +54,25 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
-      <%= f.label :departure_date_from, "Partida de", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :departure_date_from, "Data de partida", class: "block text-sm font-medium text-gray-700" %>
       <%= f.date_field :departure_date_from, required: true, value: value_for(:departure_date_from),
           class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
     </div>
     <div>
-      <%= f.label :departure_date_to, "Partida até", class: "block text-sm font-medium text-gray-700" %>
-      <%= f.date_field :departure_date_to, required: true, value: value_for(:departure_date_to),
+      <%= f.label :departure_date_to, "Flexível até (opcional)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :departure_date_to, value: value_for(:departure_date_to),
           class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 <%= "hidden" unless round_trip? %>">
     <div>
-      <%= f.label :return_date_from, "Volta de", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :return_date_from, "Data de volta", class: "block text-sm font-medium text-gray-700" %>
       <%= f.date_field :return_date_from, value: value_for(:return_date_from),
           class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
     </div>
     <div>
-      <%= f.label :return_date_to, "Volta até", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :return_date_to, "Flexível até (opcional)", class: "block text-sm font-medium text-gray-700" %>
       <%= f.date_field :return_date_to, value: value_for(:return_date_to),
           class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
     </div>

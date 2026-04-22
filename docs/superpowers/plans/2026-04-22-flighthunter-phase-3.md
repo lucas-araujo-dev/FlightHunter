@@ -621,26 +621,32 @@
   </div>
   ```
 
-- [ ] **Step 4.3: Atualizar `config/routes.rb`**
+- [ ] **Step 4.3: Atualizar `config/routes.rb` — adota `resources` e remove override de `airports`**
 
-  Substituir o conteúdo completo por:
+  Abrir o arquivo atual e:
+  - Trocar `root "home#show"` → `root "searches#new"`.
+  - Adicionar `resources :searches, only: %i[new create]`.
+  - **Trocar** `get "/airports", to: "airports#index", as: :airports` (que foi introduzido na Task 2 mas viola a regra 4 de `CLAUDE.base.md` — route override via `to:`) → **por `resources :airports, only: %i[index]`**. Helper `airports_path` e URL `/airports` continuam idênticos; a diferença é que `resources` torna a rota derivável do nome do recurso.
+
+  Estado final esperado de `config/routes.rb`:
 
   ```ruby
   Rails.application.routes.draw do
     get "up" => "rails/health#show", as: :rails_health_check
 
+    # NOTA: sessions usa route overrides (to:) — dívida técnica herdada da Fase 2.
+    # Proibido pela regra 4 de CLAUDE.base.md; manter por enquanto para evitar
+    # colisão com `root` sem reescrever Phase 2. Revisar quando houver janela.
     get "/login", to: "sessions#new", as: :login
     post "/session", to: "sessions#create", as: :session
     delete "/logout", to: "sessions#destroy", as: :logout
 
+    resources :airports, only: %i[index]
     resources :searches, only: %i[new create]
-    get "/airports", to: "airports#index", as: :airports
 
     root "searches#new"
   end
   ```
-
-  **Remova** `root "home#show"` e substitua por `root "searches#new"`.
 
 - [ ] **Step 4.4: Deletar HomeController e artefatos**
 
