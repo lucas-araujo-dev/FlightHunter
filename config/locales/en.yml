@@ -36,6 +36,31 @@ en:
       cabin_class: Class
       passengers: Passengers
       submit: Search
+    providers:
+      duffel:
+        searching: "Searching Duffel…"
+        success:
+          one: "Duffel: %{count} offer"
+          other: "Duffel: %{count} offers"
+        empty: "Duffel: no offers"
+        failure: "Duffel failed (%{error})"
+        timeout: "Duffel timed out"
+    no_results:
+      title: "No offers found."
+      create_alert: "Create alert with these criteria"
+    cached_badge: "cached"
+    errors:
+      invalid_origin_type: "Invalid origin."
+      invalid_destination_type: "Invalid destination."
+      invalid_trip_type: "Invalid trip type."
+      invalid_cabin_class: "Invalid cabin class."
+      invalid_passengers: "Passenger count must be between 1 and 9."
+      departure_range_invalid: "Departure window end is before start."
+      departure_in_past: "Departure date cannot be in the past."
+      return_date_required: "Round-trip requires a return date."
+      return_before_departure: "Return cannot be before departure."
+      origin_has_no_airports: "No airports found at origin."
+      destination_has_no_airports: "No airports found at destination."
 
   enums:
     flight_offer:
