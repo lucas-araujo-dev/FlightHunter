@@ -27,27 +27,35 @@ RSpec.describe FlightOffer::Search::Dispatch, type: :model do
   describe ".call" do
     it "enqueues DuffelJob and returns :enqueued on cache miss" do
       expect {
-        expect(described_class.call(query: query, search_id: search_id)).to eq(:enqueued)
+        result = described_class.call(query: query, search_id: search_id)
+        expect(result.status).to eq(:enqueued)
+        expect(result.offer_ids).to be_nil
       }.to have_enqueued_job(FlightOffer::Search::DuffelJob)
         .on_queue("flight_offers")
     end
 
-    it "delivers cached broadcast and does NOT enqueue on cache hit" do
+    it "returns :cache_hit with offer_ids on cache hit, without enqueuing" do
       Rails.cache.write(query.cache_key, [42, 43])
 
-      expect(FlightOffer::Search::Broadcast).to receive(:cached)
-        .with(search_id: search_id, provider: "duffel", offer_ids: [42, 43])
-
       expect {
-        expect(described_class.call(query: query, search_id: search_id)).to eq(:cache_hit)
+        result = described_class.call(query: query, search_id: search_id)
+        expect(result.status).to eq(:cache_hit)
+        expect(result.offer_ids).to eq([42, 43])
       }.not_to have_enqueued_job(FlightOffer::Search::DuffelJob)
     end
 
-    it "broadcasts empty cached state when cache hit is empty array" do
-      Rails.cache.write(query.cache_key, [])
-      expect(FlightOffer::Search::Broadcast).to receive(:cached)
-        .with(search_id: search_id, provider: "duffel", offer_ids: [])
+    it "does NOT broadcast on cache hit (inline render is controller's job)" do
+      Rails.cache.write(query.cache_key, [42, 43])
+      expect(Turbo::StreamsChannel).not_to receive(:broadcast_append_to)
+      expect(Turbo::StreamsChannel).not_to receive(:broadcast_replace_to)
       described_class.call(query: query, search_id: search_id)
+    end
+
+    it "returns empty offer_ids when cache holds an empty array" do
+      Rails.cache.write(query.cache_key, [])
+      result = described_class.call(query: query, search_id: search_id)
+      expect(result.status).to eq(:cache_hit)
+      expect(result.offer_ids).to eq([])
     end
   end
 end

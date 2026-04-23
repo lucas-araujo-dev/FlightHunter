@@ -49,3 +49,7 @@
 .DS_Store
 *.swp
 *.swo
+
+# Ignore key files for decrypting credentials and more.
+/config/credentials/*.key
+

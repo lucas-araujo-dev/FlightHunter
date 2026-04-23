@@ -6,7 +6,8 @@ class SearchesController < ApplicationController
   def create
     query = FlightOffer::Search::Query.from_params(search_params).validate!
     @search_id = SecureRandom.uuid_v7
-    FlightOffer::Search::Dispatch.call(query: query, search_id: @search_id)
+    result = FlightOffer::Search::Dispatch.call(query: query, search_id: @search_id)
+    @cached_offer_ids = (result.status == :cache_hit) ? result.offer_ids : nil
     respond_to do |format|
       format.turbo_stream
     end

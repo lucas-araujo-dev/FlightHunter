@@ -3,14 +3,6 @@ class FlightOffer::Search::Broadcast
     new(search_id: search_id, provider: provider, result: result).call
   end
 
-  def self.cached(search_id:, provider:, offer_ids:)
-    result = FlightOffer::Search::Result.new(
-      status: "cached", offer_ids: offer_ids,
-      duration_ms: 0, error_message: nil, provider: provider.to_s
-    )
-    new(search_id: search_id, provider: provider, result: result).call
-  end
-
   def initialize(search_id:, provider:, result:)
     @search_id = search_id
     @provider = provider.to_s
@@ -20,7 +12,7 @@ class FlightOffer::Search::Broadcast
   def call
     stream_key = "flight_offer_search_#{@search_id}"
 
-    if @result.success? || @result.status == "cached"
+    if @result.success?
       FlightOffer.where(id: @result.offer_ids).find_each do |offer|
         Turbo::StreamsChannel.broadcast_append_to(
           stream_key,

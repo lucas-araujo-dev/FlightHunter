@@ -55,16 +55,4 @@ RSpec.describe FlightOffer::Search::Broadcast, type: :model do
         result: result(status: "failure", error: "Boom"))
     end
   end
-
-  describe ".cached" do
-    it "broadcasts status replace + appends per offer_id" do
-      offer
-      expect(Turbo::StreamsChannel)
-        .to receive(:broadcast_append_to).once
-      expect(Turbo::StreamsChannel)
-        .to receive(:broadcast_replace_to).once
-
-      described_class.cached(search_id: search_id, provider: :duffel, offer_ids: [offer.id])
-    end
-  end
 end

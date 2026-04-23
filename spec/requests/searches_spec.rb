@@ -34,8 +34,10 @@ RSpec.describe "Searches", type: :request do
       }
     end
 
-    it "dispatches search and responds with turbo_stream replacing search_results" do
-      allow(FlightOffer::Search::Dispatch).to receive(:call).and_return(:enqueued)
+    it "dispatches search and responds with turbo_stream + stream subscription on cache miss" do
+      allow(FlightOffer::Search::Dispatch).to receive(:call).and_return(
+        FlightOffer::Search::Dispatch::Result.new(status: :enqueued, offer_ids: nil)
+      )
 
       post searches_path, params: valid_params, as: :turbo_stream
 
@@ -43,6 +45,21 @@ RSpec.describe "Searches", type: :request do
       expect(response.media_type).to eq("text/vnd.turbo-stream.html")
       expect(response.body).to include('turbo-stream action="replace" target="search_results"')
       expect(response.body).to include("turbo-cable-stream-source")
+    end
+
+    it "renders cached offers inline on cache hit, without turbo-cable-stream-source" do
+      offer = create(:flight_offer, origin_airport: for_airport, destination_airport: gru_airport)
+      allow(FlightOffer::Search::Dispatch).to receive(:call).and_return(
+        FlightOffer::Search::Dispatch::Result.new(status: :cache_hit, offer_ids: [offer.id])
+      )
+
+      post searches_path, params: valid_params, as: :turbo_stream
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('turbo-stream action="replace" target="search_results"')
+      expect(response.body).not_to include("turbo-cable-stream-source")
+      expect(response.body).to include(I18n.t("searches.cached_badge"))
+      expect(response.body).to include("#{for_airport.iata_code} → #{gru_airport.iata_code}")
     end
 
     it "returns 422 and translated alert on invalid params" do
