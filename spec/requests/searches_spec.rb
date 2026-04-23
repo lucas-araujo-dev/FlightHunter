@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe "Searches", type: :request do
   let(:user) { create(:user, email: "owner@flighthunter.local", password: "owner-password-123") }
+  let!(:for_airport) { create(:airport, iata_code: "FOR") }
+  let!(:gru_airport) { create(:airport, :sao_paulo) }
 
   before do
     post session_path, params: {email: user.email, password: "owner-password-123"}
@@ -32,11 +34,27 @@ RSpec.describe "Searches", type: :request do
       }
     end
 
-    it "stores params in session and redirects to new" do
-      post searches_path, params: valid_params
-      expect(response).to redirect_to(new_search_path)
-      follow_redirect!
-      expect(response.body).to include("FOR")
+    it "dispatches search and responds with turbo_stream replacing search_results" do
+      allow(FlightOffer::Search::Dispatch).to receive(:call).and_return(:enqueued)
+
+      post searches_path, params: valid_params, as: :turbo_stream
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include('turbo-stream action="replace" target="search_results"')
+      expect(response.body).to include("turbo-cable-stream-source")
+    end
+
+    it "returns 422 and translated alert on invalid params" do
+      post searches_path, params: valid_params.merge(origin_code: "XXX"), as: :turbo_stream
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include(I18n.t("searches.errors.origin_has_no_airports"))
+    end
+
+    it "re-renders new with flash.now on validation failure" do
+      post searches_path, params: valid_params.merge(departure_date_from: "2020-01-01"), as: :turbo_stream
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include(I18n.t("searches.errors.departure_in_past"))
     end
   end
 

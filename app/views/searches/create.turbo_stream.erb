@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "search_results" do %>
+  <%= render SearchResultsComponent.new(search_id: @search_id) %>
+<% end %>
