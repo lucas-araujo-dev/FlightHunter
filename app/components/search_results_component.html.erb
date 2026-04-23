@@ -1,0 +1,27 @@
+<div id="search_results" class="mt-6 max-w-3xl mx-auto space-y-4">
+  <% unless cached? %>
+    <%= helpers.turbo_stream_from "flight_offer_search_#{search_id}" %>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-2">
+    <% SearchResultsComponent::PROVIDERS.each do |provider| %>
+      <div id="provider_status_<%= provider %>"
+           class="px-4 py-2 rounded text-sm <%= cached? ? "bg-indigo-50 text-indigo-700" : "bg-gray-100 text-gray-700" %>">
+        <%= provider_status_label(provider) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div id="flight_offer_cards" class="space-y-3">
+    <% if cached? %>
+      <% cached_offers.each do |offer| %>
+        <%= render FlightOfferCardComponent.new(offer: offer) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div id="no_results" class="hidden px-4 py-6 text-center text-gray-600">
+    <p><%= t("searches.no_results.title") %></p>
+    <%= link_to t("searches.no_results.create_alert"), "#", class: "underline text-indigo-600" %>
+  </div>
+</div>

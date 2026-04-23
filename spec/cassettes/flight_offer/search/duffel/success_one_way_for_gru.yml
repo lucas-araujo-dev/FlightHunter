@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.duffel.com/air/offer_requests?return_offers=true&supplier_timeout=10000
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <DUFFEL_API_KEY>
+      Duffel-Version:
+      - v2
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: |
+        {"data":{"offers":[
+          {
+            "id":"off_for_gru_1",
+            "total_amount":"512.45","total_currency":"BRL",
+            "expires_at":"2026-05-14T12:00:00Z",
+            "slices":[{
+              "origin":{"iata_code":"FOR"},
+              "destination":{"iata_code":"GRU"},
+              "segments":[{
+                "departing_at":"2026-05-15T10:00:00Z",
+                "arriving_at":"2026-05-15T13:00:00Z",
+                "marketing_carrier":{"iata_code":"AD"},
+                "marketing_carrier_flight_number":"2716"
+              }]
+            }]
+          },
+          {
+            "id":"off_for_gru_2",
+            "total_amount":"689.90","total_currency":"BRL",
+            "expires_at":"2026-05-14T12:00:00Z",
+            "slices":[{
+              "origin":{"iata_code":"FOR"},
+              "destination":{"iata_code":"GRU"},
+              "segments":[{
+                "departing_at":"2026-05-15T06:30:00Z",
+                "arriving_at":"2026-05-15T10:20:00Z",
+                "marketing_carrier":{"iata_code":"G3"},
+                "marketing_carrier_flight_number":"1808"
+              },{
+                "departing_at":"2026-05-15T11:00:00Z",
+                "arriving_at":"2026-05-15T13:45:00Z",
+                "marketing_carrier":{"iata_code":"G3"},
+                "marketing_carrier_flight_number":"1910"
+              }]
+            }]
+          }
+        ]}}
+  recorded_at: Wed, 22 Apr 2026 12:00:00 GMT
+recorded_with: VCR 6.2.0

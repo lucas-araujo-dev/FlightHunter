@@ -1,4 +1,15 @@
 pt-BR:
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d/%m %H:%M"
+      long: "%d de %B de %Y, %H:%M"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m"
+      long: "%d de %B de %Y"
+
   app:
     name: FlightHunter
     description: "Ferramenta pessoal de busca de promoções de passagens."
@@ -36,6 +47,31 @@ pt-BR:
       cabin_class: Classe
       passengers: Passageiros
       submit: Buscar
+    providers:
+      duffel:
+        searching: "Buscando Duffel…"
+        success:
+          one: "Duffel: %{count} oferta"
+          other: "Duffel: %{count} ofertas"
+        empty: "Duffel: nenhuma oferta"
+        failure: "Duffel falhou (%{error})"
+        timeout: "Duffel demorou demais"
+    no_results:
+      title: "Nenhuma oferta encontrada."
+      create_alert: "Criar alerta com esses critérios"
+    cached_badge: "em cache"
+    errors:
+      invalid_origin_type: "Origem inválida."
+      invalid_destination_type: "Destino inválido."
+      invalid_trip_type: "Tipo de viagem inválido."
+      invalid_cabin_class: "Classe de cabine inválida."
+      invalid_passengers: "Número de passageiros fora do range 1–9."
+      departure_range_invalid: "Data inicial de ida maior que a final."
+      departure_in_past: "Data de ida não pode estar no passado."
+      return_date_required: "Ida e volta exige data de retorno."
+      return_before_departure: "Retorno antes da ida."
+      origin_has_no_airports: "Nenhum aeroporto encontrado na origem."
+      destination_has_no_airports: "Nenhum aeroporto encontrado no destino."
 
   enums:
     flight_offer:
@@ -44,3 +80,10 @@ pt-BR:
         premium_economy: "Premium Econômica"
         business: Executiva
         first: "Primeira classe"
+
+  flight_offer:
+    direct: "direto"
+    stops:
+      one: "%{count} conexão"
+      other: "%{count} conexões"
+    view: "ver oferta"

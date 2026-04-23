@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :flight_offer do
     provider { "duffel" }
     offer_type { "cash" }
+    sequence(:provider_offer_id) { |n| "off_#{n}_#{SecureRandom.hex(4)}" }
     association :origin_airport, factory: :airport
     association :destination_airport, factory: :airport
     departure_at { 30.days.from_now.change(hour: 10) }

@@ -1,0 +1,12 @@
+<article class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm flex items-center justify-between">
+  <div>
+    <div class="text-sm text-gray-500"><%= provider_label.upcase %> · <%= @offer.airline_iata %></div>
+    <div class="font-semibold"><%= @offer.origin_airport.iata_code %> → <%= @offer.destination_airport.iata_code %></div>
+    <div class="text-xs text-gray-500"><%= departure_display %> · <%= stops_label %></div>
+  </div>
+  <div class="text-right">
+    <div class="text-lg font-bold text-indigo-700"><%= price_display %></div>
+    <%= link_to t("flight_offer.view"), @offer.deep_link, target: "_blank", rel: "noopener",
+          class: "text-xs text-indigo-600 underline" %>
+  </div>
+</article>

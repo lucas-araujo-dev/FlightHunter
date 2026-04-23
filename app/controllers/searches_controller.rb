@@ -4,8 +4,17 @@ class SearchesController < ApplicationController
   end
 
   def create
-    session[:search_params] = search_params.to_h
-    redirect_to new_search_path
+    query = FlightOffer::Search::Query.from_params(search_params).validate!
+    @search_id = SecureRandom.uuid_v7
+    result = FlightOffer::Search::Dispatch.call(query: query, search_id: @search_id)
+    @cached_offer_ids = (result.status == :cache_hit) ? result.offer_ids : nil
+    respond_to do |format|
+      format.turbo_stream
+    end
+  rescue FlightOffer::Search::Query::InvalidError => e
+    flash.now[:alert] = t(e.i18n_key, **e.interpolations)
+    @search_params = search_params.to_h
+    render :new, status: :unprocessable_content
   end
 
   private

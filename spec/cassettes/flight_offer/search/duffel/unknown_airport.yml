@@ -1,0 +1,53 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.duffel.com/air/offer_requests?return_offers=true&supplier_timeout=10000
+    body:
+      encoding: UTF-8
+      string: ''
+    headers: {}
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: |
+        {"data":{"offers":[
+          {
+            "id":"off_known_1",
+            "total_amount":"500.00","total_currency":"BRL",
+            "expires_at":"2026-05-20T12:00:00Z",
+            "slices":[{
+              "origin":{"iata_code":"FOR"},
+              "destination":{"iata_code":"GRU"},
+              "segments":[{
+                "departing_at":"2026-05-15T10:00:00Z",
+                "arriving_at":"2026-05-15T13:00:00Z",
+                "marketing_carrier":{"iata_code":"AD"},
+                "marketing_carrier_flight_number":"2716"
+              }]
+            }]
+          },
+          {
+            "id":"off_unknown_1",
+            "total_amount":"600.00","total_currency":"BRL",
+            "expires_at":"2026-05-20T12:00:00Z",
+            "slices":[{
+              "origin":{"iata_code":"FOR"},
+              "destination":{"iata_code":"ZZZ"},
+              "segments":[{
+                "departing_at":"2026-05-15T10:00:00Z",
+                "arriving_at":"2026-05-15T13:00:00Z",
+                "marketing_carrier":{"iata_code":"AD"},
+                "marketing_carrier_flight_number":"2717"
+              }]
+            }]
+          }
+        ]}}
+  recorded_at: Wed, 22 Apr 2026 12:00:00 GMT
+recorded_with: VCR 6.2.0
