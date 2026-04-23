@@ -1,0 +1,29 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.duffel.com/air/offer_requests?return_offers=true&supplier_timeout=10000
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <DUFFEL_API_KEY>
+      Duffel-Version:
+      - v2
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"data":{"offers":[]}}'
+  recorded_at: Wed, 22 Apr 2026 12:00:00 GMT
+recorded_with: VCR 6.2.0
