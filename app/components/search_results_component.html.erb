@@ -1,0 +1,19 @@
+<div id="search_results" class="mt-6 max-w-3xl mx-auto space-y-4">
+  <%= helpers.turbo_stream_from "flight_offer_search_#{search_id}" %>
+
+  <div class="grid grid-cols-1 gap-2">
+    <% SearchResultsComponent::PROVIDERS.each do |provider| %>
+      <div id="provider_status_<%= provider %>"
+           class="px-4 py-2 rounded bg-gray-100 text-sm text-gray-700">
+        <%= t("searches.providers.#{provider}.searching") %>
+      </div>
+    <% end %>
+  </div>
+
+  <div id="flight_offer_cards" class="space-y-3"></div>
+
+  <div id="no_results" class="hidden px-4 py-6 text-center text-gray-600">
+    <p><%= t("searches.no_results.title") %></p>
+    <%= link_to t("searches.no_results.create_alert"), "#", class: "underline text-indigo-600" %>
+  </div>
+</div>
