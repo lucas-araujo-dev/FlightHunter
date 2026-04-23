@@ -44,3 +44,10 @@ en:
         premium_economy: "Premium Economy"
         business: Business
         first: "First class"
+
+  flight_offer:
+    direct: "direct"
+    stops:
+      one: "%{count} stop"
+      other: "%{count} stops"
+    view: "view offer"

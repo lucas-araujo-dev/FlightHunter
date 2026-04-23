@@ -44,3 +44,10 @@ pt-BR:
         premium_economy: "Premium Econômica"
         business: Executiva
         first: "Primeira classe"
+
+  flight_offer:
+    direct: "direto"
+    stops:
+      one: "%{count} conexão"
+      other: "%{count} conexões"
+    view: "ver oferta"
