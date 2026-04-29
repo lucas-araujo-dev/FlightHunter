@@ -47,7 +47,7 @@ gem "view_component", "~> 3.0"
 gem "ferrum", "~> 0.15"
 
 # HTML/XML parsing
-gem "nokogiri", "~> 1.16"
+gem "nokogiri", "~> 1.19"
 
 # HTTP client
 gem "httparty", "~> 0.22"
