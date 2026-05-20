@@ -41,7 +41,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # UI components encapsulated as Ruby classes [https://viewcomponent.org]
-gem "view_component", "~> 3.0"
+gem "view_component", "~> 4.11"
 
 # Headless Chrome via CDP for scraping
 gem "ferrum", "~> 0.15"
