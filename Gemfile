@@ -110,5 +110,5 @@ group :test do
   gem "selenium-webdriver"
 
   # Extra RSpec matchers for Rails
-  gem "shoulda-matchers", "~> 6.2"
+  gem "shoulda-matchers", "~> 7.0"
 end
