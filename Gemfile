@@ -56,8 +56,8 @@ gem "httparty", "~> 0.22"
 gem "telegram-bot-ruby", "~> 2.0"
 
 # Error tracking
-gem "sentry-ruby", "~> 5.17"
-gem "sentry-rails", "~> 5.17"
+gem "sentry-ruby", "~> 6.5"
+gem "sentry-rails", "~> 6.5"
 
 # CSV stdlib (bundled gem in Ruby 3.4+)
 gem "csv"
